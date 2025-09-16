@@ -1,6 +1,7 @@
 package configDB
 
 import (
+	"context"
 	"log"
 
 	"google.golang.org/grpc"
@@ -24,7 +25,11 @@ func InitDgraph() {
 
 	dgraphClient := dgo.NewDgraphClient(api.NewDgraphClient(conn))
 
-	if err := model.SetupSchema(dgraphClient); err != nil {
-		log.Fatal(err)
+	ctx := context.Background()
+	schemaManager := model.NewSchemaManager(dgraphClient)
+	if err := schemaManager.SetupAllSchemas(ctx); err != nil {
+		log.Printf("Failed to setup schemas: %v", err)
+
 	}
+
 }
