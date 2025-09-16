@@ -19,10 +19,11 @@ func InitDgraph() {
 		"localhost:9080",
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
+
 	if err != nil {
 		log.Fatal("Failed to connect to Dgraph:", err)
 	}
-
+	defer conn.Close()
 	dgraphClient := dgo.NewDgraphClient(api.NewDgraphClient(conn))
 
 	ctx := context.Background()
